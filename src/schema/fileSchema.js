@@ -5,7 +5,11 @@ const fileSchema = Schema({
   filePath: { type: String, required: true },
   size: { type: Number, required: true },
   mimeType: { type: String, required: true },
-  folder: { type: String, default: "root" },
+  folder: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Folder",
+    default: null,
+  },
   ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   uploadDate: { type: Date, default: Date.now },
 });

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 /* ---------- UPLOAD FILE ---------- */
 export const uploadFile = expressAsyncHandler(async (req, res) => {
   const file = req.file;
+  const folderId = req.query.folderId || null;
 
   if (!file) {
     return res.status(400).json({ message: "No file uploaded" });
@@ -16,7 +17,7 @@ export const uploadFile = expressAsyncHandler(async (req, res) => {
     filePath: file.path,
     size: file.size,
     mimeType: file.mimetype,
-    folder: req.body.folder || "root",
+    folder: folderId,
     ownerId: new mongoose.Types.ObjectId(req.user.id),
   });
 
@@ -30,6 +31,7 @@ export const uploadFile = expressAsyncHandler(async (req, res) => {
 export const listUserFiles = expressAsyncHandler(async (req, res) => {
   const files = await File.find({
     ownerId: new mongoose.Types.ObjectId(req.user.id),
+    folder: req.params.folderId,
   }).sort({ uploadDate: -1 });
 
   /* console.log("USER ID:", req.user.id);
