@@ -1,0 +1,13 @@
+import mongoose, { Schema } from "mongoose";
+
+const fileSchema = Schema({
+  filename: { type: String, required: true },
+  filePath: { type: String, required: true },
+  size: { type: Number, required: true },
+  mimeType: { type: String, required: true },
+  folder: { type: String, default: "root" },
+  usserId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  uploadDate: { type: Date, default: Date.now },
+});
+
+export default fileSchema;
