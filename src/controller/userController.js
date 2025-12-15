@@ -1,6 +1,8 @@
 import expressAsynchHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import { User } from "../schema/model.js";
+import jwt from "jsonwebtoken";
+import { secretKey } from "../validation/constant.js";
 
 export const createUserController = expressAsynchHandler(async (req, res, next) => {
   let data = req.body;
