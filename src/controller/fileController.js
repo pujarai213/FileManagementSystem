@@ -72,3 +72,18 @@ export const downloadByName = expressAsyncHandler(async (req, res) => {
 
   res.download(file.filePath, file.filename);
 });
+
+export const userStats = async (req, res) => {
+  const stats = await File.aggregate([
+    { $match: { ownerId: req.user.id } },
+    {
+      $group: {
+        _id: null,
+        totalFiles: { $sum: 1 },
+        totalStorage: { $sum: "$size" },
+      },
+    },
+  ]);
+
+  res.json(stats[0] || { totalFiles: 0, totalStorage: 0 });
+};
