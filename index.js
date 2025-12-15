@@ -2,6 +2,7 @@ import express, { json } from "express";
 import connectToMongodb from "./src/connectToDb/connectToMongodb.js";
 import userRoute from "./src/routes/userRoute.js";
 import fileRoute from "./src/routes/file.routes.js";
+import folderRoute from "./src/routes/folder.routes.js";
 
 let app = express();
 
@@ -18,3 +19,5 @@ app.use("/users", userRoute);
 app.use("/uploads", express.static("uploads"));
 
 app.use("/api/files", fileRoute);
+
+app.use("/api/folders", folderRoute);
