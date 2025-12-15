@@ -6,7 +6,7 @@ const fileSchema = Schema({
   size: { type: Number, required: true },
   mimeType: { type: String, required: true },
   folder: { type: String, default: "root" },
-  usserId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   uploadDate: { type: Date, default: Date.now },
 });
 
