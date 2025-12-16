@@ -1,6 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import sanitize from "sanitize-filename";
 import { fileURLToPath } from "url";
 import { v4 as uuid } from "uuid";
 
@@ -31,12 +32,30 @@ const storage = multer.diskStorage({
   },
 
   filename(req, file, cb) {
-    cb(null, `${uuid()}${path.extname(file.originalname)}`);
+    const safeOriginalName = sanitize(file.originalname);
+    const ext = path.extname(safeOriginalName);
+
+    cb(null, `${uuid()}${ext}`);
   },
 });
 
+const allowedMimeTypes = [
+  "image/jpeg",
+  "image/png",
+  "application/pdf",
+  "video/mp4",
+];
+
+const fileFilter = (req, file, cb) => {
+  if (!allowedMimeTypes.includes(file.mimetype)) {
+    return cb(new Error("Invalid file type"));
+  }
+  cb(null, true);
+};
+
 const upload = multer({
   storage,
+  fileFilter,
   limits: { fileSize: 20 * 1024 * 1024 },
 });
 
