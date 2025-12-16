@@ -2,6 +2,7 @@ import fs from "fs";
 import { File } from "../schema/model.js";
 import expressAsyncHandler from "express-async-handler";
 import mongoose from "mongoose";
+import { validateFileSignature } from "../utils/fileSignature.js";
 
 /* ---------- UPLOAD FILE ---------- */
 export const uploadFile = expressAsyncHandler(async (req, res) => {
@@ -10,6 +11,15 @@ export const uploadFile = expressAsyncHandler(async (req, res) => {
 
   if (!file) {
     return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  /* FILE CONTENT VALIDATION */
+
+  if (!validateFileSignature(file.path, file.mimetype)) {
+    fs.unlinkSync(file.path); // delete unsafe file
+    return res.status(400).json({
+      message: "File content mismatch or corrupted file",
+    });
   }
 
   const fileData = await File.create({
